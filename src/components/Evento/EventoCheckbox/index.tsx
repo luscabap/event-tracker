@@ -1,7 +1,6 @@
 import React from 'react';
 import { IEvento } from '../../../interfaces/IEvento';
-import { useSetRecoilState } from 'recoil';
-import { listaDeEventosState } from '../../../state/atom';
+import useAtualizarEvento from '../../../state/hooks/useAtualizarEvento';
 
 const EventoCheckbox: React.FC<{ evento: IEvento }> = ({ evento }) => {
   
@@ -9,9 +8,9 @@ const EventoCheckbox: React.FC<{ evento: IEvento }> = ({ evento }) => {
     'far',
     'fa-2x',
     evento.completo ? 'fa-check-square' : 'fa-square'
-  ]
+  ];
 
-  const setListaDeEventos = useSetRecoilState<IEvento[]>(listaDeEventosState)
+  const atualizarEvento = useAtualizarEvento();
 
   const alterarStatus = () => {
     const eventoAlterado = {
@@ -19,10 +18,7 @@ const EventoCheckbox: React.FC<{ evento: IEvento }> = ({ evento }) => {
     }
     eventoAlterado.completo = !evento.completo
 
-    setListaDeEventos(listaAntiga => {
-      const indice = listaAntiga.findIndex(e => e.id === evento.id)
-      return [...listaAntiga.slice(0, indice), eventoAlterado, ...listaAntiga.slice(indice + 1)]
-    })
+    atualizarEvento(eventoAlterado)
   }
 
   return (<i className={estilos.join(' ')} onClick={alterarStatus}></i>)
